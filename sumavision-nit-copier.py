@@ -14,7 +14,6 @@ import datetime
 source_card = 'card1'
 source_channel = 0
 destinations = {'card1':[1,2,3,4,5,6,7],'card4':[0,1,2,3,4,5,6,7]}
-#destinations = {'card1':[6,7],}
 
 bkp_dir='backup'
 tmp_dir='tmp'
