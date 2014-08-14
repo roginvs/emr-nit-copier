@@ -1,4 +1,4 @@
-# -*- coding: cp1251 -*-
+п»ї# -*- coding: UTF-8 -*-
 import xml.etree.ElementTree
 import gzip
 import os
@@ -7,10 +7,10 @@ import sys
 import ftplib
 import datetime
 
-# Скрипт копирует NIT таблицу с одного транспондера на указанные
-# Проверено на EMR3.0 V3.0.3.12
+# РЎРєСЂРёРїС‚ РєРѕРїРёСЂСѓРµС‚ NIT С‚Р°Р±Р»РёС†Сѓ СЃ РѕРґРЅРѕРіРѕ С‚СЂР°РЅСЃРїРѕРЅРґРµСЂР° РЅР° СѓРєР°Р·Р°РЅРЅС‹Рµ
+# РџСЂРѕРІРµСЂРµРЅРѕ РЅР° EMR3.0 V3.0.3.12
 
-# Нумерация транспондеров в конфигурации идёт с нуля, т.е. откуда копировать - Card1Port1
+# РќСѓРјРµСЂР°С†РёСЏ С‚СЂР°РЅСЃРїРѕРЅРґРµСЂРѕРІ РІ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РёРґС‘С‚ СЃ РЅСѓР»СЏ, С‚.Рµ. РѕС‚РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ - Card1Port1
 source_card = 'card1'
 source_channel = 0
 destinations = {'card1':[1,2,3,4,5,6,7],'card4':[0,1,2,3,4,5,6,7]}
@@ -26,7 +26,7 @@ sumavision_password = 'target'
 def check_directories():
   for x in (bkp_dir,tmp_dir):
    if not os.path.isdir(x):
-      sys.stdout.write(u'Создаём каталог %s.. ' % x)
+      sys.stdout.write(u'РЎРѕР·РґР°С‘Рј РєР°С‚Р°Р»РѕРі %s.. ' % x)
       os.mkdir(x)
       sys.stdout.write(u'ok\n')
 
@@ -36,7 +36,7 @@ def _get_cards_in_action():
     return list(set(cards_in_action))
 
 def download_config_to_backup():
-    sys.stdout.write(u'Скачиваем конфигурацию %s:\n' % backup_id)
+    sys.stdout.write(u'РЎРєР°С‡РёРІР°РµРј РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ %s:\n' % backup_id)
     
     os.mkdir(os.path.join(bkp_dir,backup_id))
     os.mkdir(os.path.join(bkp_dir,backup_id,'para'))
@@ -52,7 +52,7 @@ def download_config_to_backup():
         sys.stdout.write(u'ok\n')
     
 def upload_cards_config_to_emr():
-   sys.stdout.write(u'Закачиваем конфигурацию карт на EMR:\n')
+   sys.stdout.write(u'Р—Р°РєР°С‡РёРІР°РµРј РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ РєР°СЂС‚ РЅР° EMR:\n')
    ftp = ftplib.FTP(sumavision_ip,sumavision_login,sumavision_password)
    ftp.cwd('para')
    for card in _get_cards_in_action():
@@ -60,13 +60,13 @@ def upload_cards_config_to_emr():
      file_to_upload = open(os.path.join(tmp_dir,backup_id,"%s.xml.gz" % card),'rb')
      ftp.storbinary('STOR %s.xml.gz' % card, file_to_upload)
      file_to_upload.seek(0)
-     ftp.storbinary('STOR %s.xml.bak.gz' % card, file_to_upload) # Похоже что EMR нужны оба файла
+     ftp.storbinary('STOR %s.xml.bak.gz' % card, file_to_upload) # РџРѕС…РѕР¶Рµ С‡С‚Рѕ EMR РЅСѓР¶РЅС‹ РѕР±Р° С„Р°Р№Р»Р°
      file_to_upload.close()
      sys.stdout.write(u'ok\n')
 
 
 def unpack_cards():
-    sys.stdout.write(u'Распаковываем xml.. ')
+    sys.stdout.write(u'Р Р°СЃРїР°РєРѕРІС‹РІР°РµРј xml.. ')
     os.mkdir(os.path.join(tmp_dir,backup_id))
     for card in _get_cards_in_action():
         sfname = os.path.join(bkp_dir,backup_id,'para',"%s.xml.gz" % card)        
@@ -79,7 +79,7 @@ def unpack_cards():
     sys.stdout.write(u'ok\n')
     
 def pack_cards():
-    sys.stdout.write(u'Архивируем xml.. ')
+    sys.stdout.write(u'РђСЂС…РёРІРёСЂСѓРµРј xml.. ')
     for card in _get_cards_in_action():
         sfname = os.path.join(tmp_dir,backup_id,"%s.xml" % card)        
         dfname = os.path.join(tmp_dir,backup_id,"%s.xml.gz" % card)                
@@ -92,7 +92,7 @@ def pack_cards():
     
 def get_source_nit():
     #qam8Param/qam8PortPara/idx7/psiPkt/idx0/pid
-    sys.stdout.write(u'Достаём NIT таблицу с карты %s, транспондер %s.. ' % (source_card,source_channel))
+    sys.stdout.write(u'Р”РѕСЃС‚Р°С‘Рј NIT С‚Р°Р±Р»РёС†Сѓ СЃ РєР°СЂС‚С‹ %s, С‚СЂР°РЅСЃРїРѕРЅРґРµСЂ %s.. ' % (source_card,source_channel))
     tree = xml.etree.ElementTree.parse(os.path.join(tmp_dir,backup_id,"%s.xml" % source_card))
     root = tree.getroot()    
     source_nit = []
@@ -103,7 +103,7 @@ def get_source_nit():
     return source_nit
 
 def fix_nit_and_fix_ids():
-    sys.stdout.write(u'Вписываем новую NIT:\n')
+    sys.stdout.write(u'Р’РїРёСЃС‹РІР°РµРј РЅРѕРІСѓСЋ NIT:\n')
     for card in destinations.keys():
       card_fname = os.path.join(tmp_dir,backup_id,"%s.xml" % card)
       tree = xml.etree.ElementTree.parse(card_fname)
@@ -111,9 +111,9 @@ def fix_nit_and_fix_ids():
       
       
       root = tree.getroot()
-      sys.stdout.write (u'  Редактируем %s:\n' % card)
+      sys.stdout.write (u'  Р РµРґР°РєС‚РёСЂСѓРµРј %s:\n' % card)
       for channel in destinations[card]:
-        sys.stdout.write(u"    Транспондер %s:\n" % channel)
+        sys.stdout.write(u"    РўСЂР°РЅСЃРїРѕРЅРґРµСЂ %s:\n" % channel)
         psiPkt = root.find('qam8PortPara').find('idx%s' % channel).find('psiPkt') 
         if psiPkt:
           to_remove = []
@@ -121,19 +121,19 @@ def fix_nit_and_fix_ids():
             if x.find('pid').text == '0x10' and x.find('psiType').text == '4':
              to_remove.append(x)
           for x in to_remove:
-            sys.stdout.write(u"      Удаляем старый элемент %s.. " % x.tag)  
+            sys.stdout.write(u"      РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ СЌР»РµРјРµРЅС‚ %s.. " % x.tag)  
             psiPkt.remove(x)
             sys.stdout.write(u"ok\n")                       
           for x in source_nit:
-            sys.stdout.write(u"      Добавляем новый элемент %s.. " % x.tag)
-            #Это чтобы ссылки были на разные экземпляры и далее правка tag-а в одном месте не влияла на другой
+            sys.stdout.write(u"      Р”РѕР±Р°РІР»СЏРµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ %s.. " % x.tag)
+            #Р­С‚Рѕ С‡С‚РѕР±С‹ СЃСЃС‹Р»РєРё Р±С‹Р»Рё РЅР° СЂР°Р·РЅС‹Рµ СЌРєР·РµРјРїР»СЏСЂС‹ Рё РґР°Р»РµРµ РїСЂР°РІРєР° tag-Р° РІ РѕРґРЅРѕРј РјРµСЃС‚Рµ РЅРµ РІР»РёСЏР»Р° РЅР° РґСЂСѓРіРѕР№
             new_x = xml.etree.ElementTree.fromstring(xml.etree.ElementTree.tostring(x))            
             psiPkt.append(new_x)
             sys.stdout.write(u"ok\n")
             
           count = len(root.find('qam8PortPara').find('idx%s' % channel).find('psiPkt'))
           if int(root.find('qam8PortPara').find('idx%s' % channel).find('xml_psiPkt_length').text) != count:
-              sys.stdout.write(u"      Корректируем тэг с количеством элементов.. ")
+              sys.stdout.write(u"      РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј С‚СЌРі СЃ РєРѕР»РёС‡РµСЃС‚РІРѕРј СЌР»РµРјРµРЅС‚РѕРІ.. ")
               root.find('qam8PortPara').find('idx%s' % channel).find('xml_psiPkt_length').text = "%s" % count
               sys.stdout.write(u"ok\n")
 
@@ -141,7 +141,7 @@ def fix_nit_and_fix_ids():
           for x in psiPkt:            
             new_tag = "idx%s" % i
             if x.tag != new_tag:
-               sys.stdout.write(u"      Перенумеровываем элемент %s в %s.. " % (x.tag,new_tag))
+               sys.stdout.write(u"      РџРµСЂРµРЅСѓРјРµСЂРѕРІС‹РІР°РµРј СЌР»РµРјРµРЅС‚ %s РІ %s.. " % (x.tag,new_tag))
                x.tag= new_tag
                sys.stdout.write(u"ok\n") 
             i += 1
@@ -151,7 +151,7 @@ def fix_nit_and_fix_ids():
 #            print x.find('pid').text
 
           
-      sys.stdout.write(u'    Сохраняем.. ')
+      sys.stdout.write(u'    РЎРѕС…СЂР°РЅСЏРµРј.. ')
       tree.write(card_fname,'utf-8',True)
       sys.stdout.write(u'ok\n')
 
@@ -159,7 +159,7 @@ def fix_nit_and_fix_ids():
     
         
 def delete_temp():
-    sys.stdout.write(u'Удаляем временные файлы.. ')
+    sys.stdout.write(u'РЈРґР°Р»СЏРµРј РІСЂРµРјРµРЅРЅС‹Рµ С„Р°Р№Р»С‹.. ')
     cur_tmp_dir = os.path.join(tmp_dir,backup_id)
     for fname in os.listdir(cur_tmp_dir):
         full_fname = os.path.join(cur_tmp_dir,fname)
