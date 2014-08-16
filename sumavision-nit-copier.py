@@ -1,4 +1,4 @@
-﻿# -*- coding: UTF-8 -*-
+# -*- coding: UTF-8 -*-
 import xml.etree.ElementTree
 import gzip
 import os
@@ -130,9 +130,9 @@ def fix_nit_and_fix_ids():
             psiPkt.append(new_x)
             sys.stdout.write(u"ok\n")
             
-          count = len(root.find('qam8PortPara').find('idx%s' % channel).find('psiPkt'))
+          count = len(psiPkt)
           if int(root.find('qam8PortPara').find('idx%s' % channel).find('xml_psiPkt_length').text) != count:
-              sys.stdout.write(u"      Корректируем тэг с количеством элементов.. ")
+              sys.stdout.write(u"      Корректируем значение с количеством элементов.. ")
               root.find('qam8PortPara').find('idx%s' % channel).find('xml_psiPkt_length').text = "%s" % count
               sys.stdout.write(u"ok\n")
           # <pktNum>1,9,2,0,2,0,0,0,0,0,0,0</pktNum>
